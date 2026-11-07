@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.job-seeking/schemas/user.schema.json",
+  "title": "Split Job Seeking User Memory",
+  "description": "Schema bundle for the split user memory rooted at data/user/index.json.",
+  "$ref": "#/$defs/index",
+  "$defs": {
+    "index": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "memory_format",
+        "schema",
+        "files"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "memory_format": {
+          "const": "split_user_memory"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "files": {
+          "type": "object",
+          "required": [
+            "profile",
+            "skills",
+            "resume_preferences",
+            "experience",
+            "projects",
+            "education",
+            "certifications"
+          ],
+          "properties": {
+            "profile": {
+              "type": "string"
+            },
+            "skills": {
+              "type": "string"
+            },
+            "resume_preferences": {
+              "type": "string"
+            },
+            "experience": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "projects": {
+              "type": "string"
+            },
+            "education": {
+              "type": "string"
+            },
+            "certifications": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "genericRecord": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "profileFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "candidate",
+        "professional_identity",
+        "career_transition_justification",
+        "company_preferences",
+        "career_certification_commitments"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "candidate": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "alternate_name": {
+              "type": "string"
+            },
+            "credentials": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "linkedin": {
+              "type": "string"
+            },
+            "github": {
+              "type": "string"
+            }
+          }
+        },
+        "professional_identity": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "career_transition_justification": {
+          "$ref": "#/$defs/genericRecord"
+        },
+        "company_preferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/genericRecord"
+          }
+        },
+        "career_certification_commitments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/genericRecord"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "skillsFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "skills"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "skills": {
+          "type": "object",
+          "additionalProperties": true,
+          "not": {
+            "required": [
+              "preferred_resume_skill_set"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "resumePreferencesFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "purpose",
+        "section_order",
+        "skills_display"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "section_order": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "skills_display": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "experienceRoleFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "title",
+        "organization",
+        "dates",
+        "highlights"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "title": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "dates": {
+          "type": "string"
+        },
+        "technologies": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "scale": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "highlights": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/starHighlight"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "starHighlight": {
+      "type": "object",
+      "required": [
+        "situation",
+        "action",
+        "outcomes"
+      ],
+      "properties": {
+        "background": {
+          "type": "object",
+          "description": "Optional, freeform factual context for this highlight, such as product, domain, scale, challenge, audience, constraints, data sources, or operating environment.",
+          "additionalProperties": true
+        },
+        "situation": {
+          "type": "string"
+        },
+        "tasks": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "action": {
+          "type": "object",
+          "required": [
+            "methodologies",
+            "technical_tools",
+            "description"
+          ],
+          "properties": {
+            "methodologies": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "technical_tools": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "outcomes": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "additionalProperties": false
+    },
+    "projectsFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "projects"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/genericRecord"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "educationFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "education"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "education": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/genericRecord"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "certificationsFile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "certifications"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "8.0"
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/genericRecord"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

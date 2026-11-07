@@ -1,0 +1,25 @@
+# Private candidate data and application artifacts.
+data/
+retired/
+config.json
+user.json
+jobs/
+drafts/
+accepted/
+inputs/
+private-applications/
+formatter/inputs/
+formatter/outputs/
+formatter/reference/
+outputs/
+tmp/
+.tmp/
+
+# Local development files.
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.DS_Store
+.vscode/

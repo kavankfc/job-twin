@@ -1,0 +1,17 @@
+{
+  "description": "Inject compact job-application handoff requirements into each Codex subagent.",
+  "hooks": {
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/subagent_start.py\"",
+            "timeout": 5,
+            "additionalContextLimit": 300
+          }
+        ]
+      }
+    ]
+  }
+}
