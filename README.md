@@ -53,7 +53,7 @@ python3 .agents/skills/user-json-memory/validate_user_memory.py
 
 Provide a full job posting under `data/raw/`, or give the agent a posting URL. For a URL, the agent must retrieve the complete posting using its available web/browser tools, preserve the source URL in the job methodology notes, and save the posting as `jd.md` in a normalized job folder before evaluation. If retrieval fails, provide the posting text. This repository does not include a web scraper.
 
-The required sequence is evaluator → evidence librarian → resume writer → independent resume review → cover-letter writer → package review → finisher. The cover letter starts only after the current CV passes review. Writers use verified evidence and ask about material gaps.
+The required sequence is evaluator → evidence librarian → resume writer → independent resume review → cover-letter writer → package review → finisher. The cover letter starts only after the current CV passes review. The evaluator defines employer expectations; the librarian owns candidate matching, the fit assessment, and evidence interviews using `grill-me`. Writers use those classifications and return new evidence issues through the parent; the reviewer independently checks the resulting claims.
 
 After the required reviews pass, format the Markdown sources:
 

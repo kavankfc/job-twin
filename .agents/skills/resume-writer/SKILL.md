@@ -9,11 +9,11 @@ This skill owns the CV writing: profile, skills, optional core competencies, emp
 
 ## Sources
 
-1. `user_subset.json` — main evidence source when it exists.
-2. Split user memory rooted at `data/user/index.json` — fallback and verification.
-3. `jd.md` / `role_expectations.json` — employer side only. `keywords` is JD vocabulary, not proof: classify each keyword as supported, adjacent, or unsupported against candidate evidence before it may appear in the CV.
+1. `user_subset.json` — selected evidence and supported/adjacent/unsupported classifications owned by the librarian. If absent, request it through the parent before drafting.
+2. Split user memory rooted at `data/user/index.json` — verification of cited facts, using its memory skill; do not independently select or reclassify evidence.
+3. `jd.md` / `role_expectations.json` — employer priorities and vocabulary, not candidate proof. Consume the subset's classifications and verify that each claim has its cited support.
 4. `data/user/resume_preferences.json` — the user's display defaults (skills labels, section order) and writing-style signals.
-5. The latest active resume under `artifacts/resumes/` when revising. Do not read or use `retired/` unless the user explicitly asks for a historical comparison or recovery.
+5. The latest active resume plus user comments when revising, under `instruction.md` → Versioned Application Artifacts.
 
 ## Truth Rules
 
@@ -23,14 +23,9 @@ This skill owns the CV writing: profile, skills, optional core competencies, emp
 - Don't inflate ownership: use "supported" or "helped" when ownership was partial.
 - No copied JD boilerplate. Use supported JD keywords unchanged only where they describe the actual work and read naturally.
 
-## Gap Discovery Interview
+## Evidence Issues
 
-When an important JD requirement looks unsupported, interview the user before drafting around it. This is evidence mining, not a formality:
-
-- Probe every plausible source: paid work, internships, school, certifications, side projects, volunteer work, tools used indirectly.
-- Ask for concrete details (task, context, dates, ownership, tools, scale, deliverable, outcome) and mine for metrics (before/after time, volume, error rate, users, dollars, percentage, turnaround, adoption).
-- Keep asking until the requirement is supported directly, supported adjacently, or confirmed as a real gap. Don't accept vague answers.
-- Record durable confirmed facts in `user_subset.json`, or in the split memory via `.agents/skills/user-json-memory/SKILL.md` when application-neutral.
+If an important requirement lacks evidence or a subset classification conflicts with its source, return the exact issue through the parent to `candidate_evidence_librarian`. The librarian owns interviews and subset corrections; do not repeat its interview or draft the affected claim until resolved. Apply verified updates when the librarian returns the subset.
 
 ## Pre-Draft Resume Plan
 
@@ -64,7 +59,7 @@ Before writing prose, add a compact `resume_plan` to `user_subset.json`:
 
 Use the smallest mode that satisfies the request: full CV, profile only, core competencies only, or single-section revision (replace only the requested section). Contact details appear only in a full CV header.
 
-Full CVs in a job folder go to `artifacts/resumes/targeted_resume_vNNN.md` (next zero-padded version; `chronological_resume_vNNN.md` for chronological variants). When revising, start from the latest active version plus the user's comments, move the previous active source first to the matching root-level `retired/YYYYMM/company_role_title/artifacts/resumes/` path while preserving its filename, then write the new active source. Never overwrite an existing source, and do not use `retired/` unless the user explicitly asks for a historical comparison or recovery. Validate each draft; format only after the independent standout `PASS`, as required by `instruction.md`.
+Follow `instruction.md` → Versioned Application Artifacts for resume-family filenames, source revisions, retirement, and formatted outputs. Validate every draft; format only after the independent standout `PASS`.
 
 Full CV structure unless the user asks otherwise:
 
@@ -100,7 +95,7 @@ Full CV structure unless the user asks otherwise:
 
 ## Professional Profile
 
-3-5 short, scannable sentences, each doing distinct work: professional identity and target-fit, core analytical/technical strength, role-relevant tools or methods, scale or impact, stakeholder or communication value. Open with a sentence that signals fit for this role. Don't list every tool, employer, or domain. Mention Excel only when backed by concrete work; describe visualization tools by purpose (dashboards, decision-ready insights); make stakeholder communication concrete (requirements gathering, adoption, plain-language explanation).
+3-5 short, scannable sentences, each doing distinct work: professional identity and target-fit, core analytical/technical strength, role-relevant tools or methods, scale or impact, stakeholder or communication value. Open with a sentence that signals fit for the requested role and level. Don't list every tool, employer, or domain. Mention Excel only when backed by concrete work; describe visualization tools by purpose (dashboards, decision-ready insights); make stakeholder communication concrete (requirements gathering, adoption, plain-language explanation).
 
 ## Skills
 
@@ -149,19 +144,10 @@ Keep education factual. Include only certifications and projects relevant to the
 
 The independent `application_reviewer`, not the writer, owns the final senior-HR standout verdict. When its verdict is `REDRAFT_REQUIRED`:
 
-- Use the reviewer's prioritized findings as revision requirements, but apply only directions supported by `user_subset.json` or verified source memory.
+- Use the reviewer's prioritized findings as revision requirements, but apply only directions supported by `user_subset.json`. Verify source facts and return evidence discrepancies to the librarian before changing claims.
 - Make a substantive next version: sharpen the target identity and differentiator in the top third, reorder the strongest evidence toward the role's priorities, replace vague or low-value content with stronger supported proof, and improve scan clarity. Do not satisfy the gate with synonym swaps, inflated language, graphics, or invented claims.
 - Preserve valid facts, metrics, ownership boundaries, user-approved voice, and supported keyword coverage from the prior active version.
 - Follow the active/retired version policy, validate the new Markdown and alignment, and return it for another independent standout review. Do not self-declare `PASS`.
-- Stop after two reviewer-led redrafts in one request. If the remaining weakness is an evidence gap, ask the user targeted questions; if it is an unavoidable profile limitation, report it honestly.
+- Stop after two reviewer-led redrafts in one request. If an evidence gap prevents a pass, return it through the parent to the librarian for its targeted interview; report unavoidable profile limitations honestly.
 
-## Quality Checklist
-
-- Targets the requested role and level; important unmatched requirements went through the gap interview.
-- Profile is 3-5 sentences; skills are supported, focused buckets; Core Competencies omitted unless justified (then exactly three headings).
-- Most bullets clearly show action, material method or tool, and concrete effect; ≤7 bullets per role; no story split across bullets; no repeated story between sections.
-- `resume_plan` and `voice_brief` were applied; supported terms are present or explicitly waived; adjacent and unsupported terms are not presented as direct experience; no unexplained coverage regression occurred.
-- Metrics exact; direct vs adjacent not blurred; missing tools not claimed; no JD boilerplate.
-- LinkedIn appears as the complete plain-text profile URL, not as a generic label or Markdown hyperlink.
-- The current draft is ready for an independent senior-HR standout decision; any prior `REDRAFT_REQUIRED` findings were addressed with substantive, evidence-safe changes.
-- Versioning, formatting, and file placement follow `instruction.md`.
+Before reviewer handoff, apply the section standards and keyword/voice gates above, validate the draft, and confirm any prior reviewer findings were addressed.

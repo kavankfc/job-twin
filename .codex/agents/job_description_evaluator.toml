@@ -1,5 +1,5 @@
 name = "job_description_evaluator"
-description = "Evaluate a normalized job description for employer-side role expectations and candidate-fit criteria."
+description = "Evaluate a normalized job description for employer-side role expectations."
 sandbox_mode = "workspace-write"
 
 developer_instructions = """
@@ -13,7 +13,7 @@ Input and scope:
 - Read the normalized jd.md and preserve its text exactly. Never rewrite, normalize, annotate, or delete the JD.
 - You may write only the employer-side role_expectations.json in that job folder. Do not edit data/user, application materials, or any other path.
 
-Produce role expectations from the employer's stated requirements: responsibilities, required and preferred qualifications, evidence signals, constraints, and explicit uncertainties. Keep employer facts separate from candidate claims; do not invent requirements or fit conclusions unsupported by the JD.
+Produce role expectations from the employer's stated requirements: responsibilities, required and preferred qualifications, evidence signals, constraints, and explicit uncertainties. Keep this task employer-side; do not read candidate memory, classify candidate matches, score fit, or invent JD requirements.
 
 Handoff: return the exact paths changed, a concise list of facts and assumptions, validation commands/checks performed, and unresolved blockers. Explicitly identify the role_expectations.json path for the librarian. Do not proceed to candidate evidence selection or writing materials.
 """

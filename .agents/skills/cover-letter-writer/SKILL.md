@@ -9,11 +9,11 @@ The letter complements the resume — it must not repeat it. It adds motivation,
 
 ## Inputs
 
-- JD / `role_expectations.json`. `keywords` is JD-only vocabulary: classify each as supported, adjacent, or unsupported against candidate evidence before using it. Mirror exact wording only where supported and natural; frame adjacent evidence as transferable, never as a direct claim.
+- JD / `role_expectations.json` supplies employer vocabulary; consume the librarian's classifications in `user_subset.json`. Mirror exact wording only where supported and natural; frame adjacent evidence as transferable, never as a direct claim.
 - The targeted resume for this job — the letter must match its facts and keyword strategy exactly.
-- `user_subset.json`, or the split memory at `data/user/index.json` if no subset exists.
-- `data/user/profile.json`: `company_preferences` (high-value opening material when it has an entry for this employer), `career_transition_justification` (fold in as a one-two sentence bridge when relevant), `career_certification_commitments` (closing-paragraph signal when a planned credential addresses a visible gap).
-- The latest active version under `artifacts/cover_letters/`; when revising, start from it plus the user's comments. Do not read or use `retired/` unless the user explicitly asks for a historical comparison or recovery.
+- `user_subset.json` supplies selected evidence and classifications. Use split memory at `data/user/index.json` only to verify cited facts under its memory skill. If the subset is absent or evidence is missing/conflicting, return the issue through the parent to the librarian before drafting the affected claim; do not reclassify or repeat its interview.
+- The subset's source-anchored `profile_context` from `data/user/profile.json`: `company_preferences` (high-value opening material for this employer), `career_transition_justification` (a one-two sentence bridge when relevant), and `career_certification_commitments` (a closing signal when a planned credential addresses a visible gap). If relevant context is missing, request it through the librarian.
+- The latest active letter plus user comments when revising, under `instruction.md` → Versioned Application Artifacts.
 - The company's real mailing address from an official source (company site or the posting); omit the address only if none can be found.
 
 ## Perspective
@@ -24,7 +24,9 @@ The letter complements the resume — it must not repeat it. It adds motivation,
 
 ## File And Format
 
-Save to `artifacts/cover_letters/cover_letter_vNNN.md` (next zero-padded version). When revising, move the previous active source first to the matching root-level `retired/YYYYMM/company_role_title/artifacts/cover_letters/` path while preserving its filename, then write the new active source; never overwrite an existing source. Do not use `retired/` unless the user explicitly asks for a historical comparison or recovery. Then format per `instruction.md`.
+Follow `instruction.md` → Versioned Application Artifacts for letter filenames, source revisions, retirement, and formatted outputs.
+
+Use the complete format below, including four paragraphs:
 
 ```markdown
 [Month Day, Year]
@@ -74,14 +76,8 @@ When the letter targets an organization rather than one role:
 
 - Under 410 words. Short paragraphs, plain verbs.
 - Handle gaps honestly and without apology: name obvious ramp-up areas briefly and state how they'd be approached; mention a gap only when it will be obvious to the reader.
-- Metrics only when supported; facts must match the resume exactly.
+- Metrics only when supported; facts must match the resume exactly, and unsupported keywords must not be claimed.
 - Salary stays out unless the user asks; then use neutral wording ("the posted range aligns with my market research; I am comfortable discussing compensation within it").
 - Don't copy internet cover-letter examples.
 
-## Quality Checklist
-
-- Under 410 words; first sentence company- or role-specific; letter unusable for another company unchanged.
-- Body uses specific stories, not trait lists; supported keywords appear naturally; unsupported keywords are not claimed.
-- No paragraph starts with I/me/my; tone employer-focused; obvious application questions answered briefly.
-- Resume and letter present one cohesive candidate; closing is concise and interview-oriented.
-- Full format present (date, recipient block, Re: line, greeting, four paragraphs, sign-off); versioning and formatting follow `instruction.md`.
+Before package review, check the letter against the format, perspective, paragraph, and drafting rules above; confirm it presents one cohesive candidate with the approved resume.

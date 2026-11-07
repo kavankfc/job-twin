@@ -97,6 +97,7 @@ retired/YYYYMM/company_role_title/
 Versioning rules:
 
 - Use zero-padded version numbers: `v001`, `v002`, `v003`.
+- Never overwrite an existing source or retirement destination.
 - Before creating a resume/CV, inspect the active `artifacts/resumes/` and identify the latest relevant version.
 - Before creating a cover letter, inspect the active `artifacts/cover_letters/` and identify the latest version.
 - If the user asks for a revision, use the latest active artifact plus the user's comments as the starting point, move that previous active source to the matching `retired/` location first, then create the next version.
@@ -113,12 +114,12 @@ Versioning rules:
 
 ## Workflow
 
-1. Read and normalize the job description.
+1. The parent orchestrator reads and normalizes the job description.
    - Identify the company, industry, role title, level, department, location, work arrangement, employment type, salary range, and close date.
    - Separate company background from the actual role expectations.
    - Focus mainly on duties, requirements, tools, domain knowledge, and success signals.
 
-2. Create `role_expectations.json`.
+2. `job_description_evaluator` creates `role_expectations.json` from the normalized JD.
    - Keep this file strictly employer-side: JD facts plus clearly marked inference only.
    - Include the required concepts, not a rigid schema: source file, posting metadata, company/industry context, role purpose, key duties, requirements, assets/provisos, inferred day-to-day expectations, likely success measures, seniority signals, and keywords.
    - Do not include candidate facts, split user-memory evidence, fit scores, supported/unsupported classifications, application strategy, or gap-handling advice.
@@ -126,15 +127,17 @@ Versioning rules:
    - Keep `keywords` concise. Do not dump every responsibility phrase, generic stakeholder noun, action verb, interview detail, or low-signal JD wording into this field. Put those details in `duties`, `inferred_day_to_day_expectations`, or notes instead.
    - Keep `keywords` JD-only. Do not split keywords by whether they are supported by the candidate; that comparison belongs in `user_subset.json`.
 
-3. Compare the role against the split user memory.
+3. `candidate_evidence_librarian` compares the role against the split user memory.
+   - The librarian owns candidate-fit classifications and evidence-gap interviews. Follow `.agents/skills/candidate-evidence-retrieval/SKILL.md`, including its use of `grill-me` for unresolved material gaps.
    - Score fit mainly against job requirements, not generic company appeal.
    - Separate direct matches, adjacent matches, and gaps, especially for missing tools, domain experience, certifications, or seniority.
    - Use simple scoring when useful, such as `L3: 82/100`, `L4: 68/100`, or `Overall: 75/100`.
    - Explain scores with evidence from `data/user/` files, not vibes.
 
-4. Create `user_subset.json`.
+4. The same librarian creates `user_subset.json` and `fit_assessment.md` from those classifications.
+   - Keep the subset and fit assessment consistent; do not perform a second independent matching pass. Explain supported, adjacent, and unsupported requirements with evidence and include a score when useful.
    - Use the split user memory rooted at `data/user/index.json` as the source of truth.
-   - Include the required concepts, not a rigid schema: source files, target role focus, role-relevant skills, selected experience, why each selected experience matters, supported/adjacent/unsupported keyword handling, and gap notes.
+   - Include the required concepts, not a rigid schema: source files, target role focus, role-relevant skills, selected experience, why each selected experience matters, supported/adjacent/unsupported keyword handling, relevant profile context for the cover letter, and gap notes.
    - For high-value selected experience, preserve the resume-writing logic explicitly: role expectation matched, primary causal driver, supporting tools or methodology, and measurable/observable outcome.
    - Include all jobs if requested; otherwise keep only role-relevant experience.
    - Preserve enough role facts for every included job to draft accurately: title, organization, location, dates, relevant skills, relevant evidence, and relevance to the target role.
@@ -142,24 +145,22 @@ Versioning rules:
 
 5. Draft the targeted resume/CV.
    - Use `.agents/skills/resume-writer/SKILL.md` for all CV-writing rules, structure, and quality checks.
-   - Use `user_subset.json` as the main source.
+   - Use `user_subset.json` as the main source and consume the librarian's classifications. If evidence or a classification is missing or contradictory, return the issue through the parent to the librarian before drafting the affected claim; do not reclassify or repeat the interview.
    - Before writing prose, add a compact `resume_plan` to `user_subset.json`. For every supported keyword, record its priority (`must_cover` or `supporting`), evidence anchor, planned wording, primary section, and treatment (`exact`, `variant`, or `omit_with_reason`). An omission or variant requires a reason. Add a short `voice_brief` based on user-approved wording and `resume_preferences.json`.
    - Draft Employment History and relevant Projects from candidate evidence and the `voice_brief` first. Apply planned JD vocabulary to those stories second, then write the profile and skills from the completed evidence. Use exact supported nouns where recognition matters, but keep verbs, sentence structure, ownership, stakeholders, tools, and outcomes candidate-led.
    - Do not add Core Competencies or abstract skill taxonomies solely to carry keywords. A Skills-section or heading mention is surface coverage, not evidence coverage.
    - Before formatting, run the resume alignment preflight. Every supported keyword must be present as planned or explicitly waived; unsupported keywords must not appear; and a revision must not silently lose supported terms from the preceding version. `formatter/format_resume.py` runs this preflight automatically for job-folder resumes and stops before creating DOCX/PDF files when it fails. If the user explicitly wants the Markdown formatted despite those failures, rerun it with `--force`; the validation report is still printed.
-   - Inspect the active `artifacts/resumes/` family, move its previous active source to the matching root-level `retired/YYYYMM/company_role_title/artifacts/resumes/` path first, then create the next versioned Markdown filename, such as `targeted_resume_v001.md` or `chronological_resume_v001.md`.
-   - If revising an existing resume/CV, read the latest active version first and apply the user's comments to produce the next version; do not use `retired/` unless the user explicitly asks for historical comparison or recovery.
+   - Create or revise the resume source under the Versioned Application Artifacts policy above.
    - Before treating the resume as final, send it to the independent `application_reviewer` for the senior-HR standout gate defined in `.agents/skills/application-review/SKILL.md`. The reviewer must return `PASS` or `REDRAFT_REQUIRED`; the writer must not self-certify this gate.
-   - On `REDRAFT_REQUIRED`, return the reviewer's prioritized, evidence-safe directions to the same `resume_writer`. Retire the failed active source, create the next version, and repeat the independent gate. Allow at most two reviewer-led redrafts (three drafts total) per request. If missing evidence prevents a pass, pause for targeted user evidence rather than inventing content or cycling through cosmetic rewrites.
+   - On `REDRAFT_REQUIRED`, return the reviewer's prioritized, evidence-safe directions to the same `resume_writer`. Retire the failed active source, create the next version, and repeat the independent gate. Allow at most two reviewer-led redrafts (three drafts total) per request. If missing evidence prevents a pass, route it to the librarian for a targeted user interview rather than inventing content or cycling through cosmetic rewrites.
    - During this review/redraft loop, run `python3 formatter/resume_validation.py <resume-path>` on every draft, but create the ready-to-submit formatted copies only after the resume receives `PASS`.
    - Do not duplicate detailed CV guidance in this file; keep CV-specific knowledge in the CV skill.
 
 6. Draft the targeted cover letter.
    - Use `.agents/skills/cover-letter-writer/SKILL.md` for all cover-letter writing rules, structure, and quality checks.
    - Start only after the current resume receives the senior-HR standout `PASS`, and read that approved version before drafting.
-   - Use `role_expectations.json.keywords` as the employer's JD-only vocabulary guide, and use `user_subset.json` to decide which keywords are supported, adjacent, or unsupported. Mirror exact wording only where it improves alignment without sounding copied or overclaimed.
-   - Inspect the active `artifacts/cover_letters/` family, move its previous active source to the matching root-level `retired/YYYYMM/company_role_title/artifacts/cover_letters/` path first, then create the next versioned Markdown filename, such as `cover_letter_v001.md`.
-   - If revising an existing cover letter, read the latest active version first and apply the user's comments to produce the next version; do not use `retired/` unless the user explicitly asks for historical comparison or recovery.
+   - Use `role_expectations.json.keywords` as the employer's JD-only vocabulary guide and consume `user_subset.json` classifications. Mirror exact wording only where it improves alignment without sounding copied or overclaimed. Route missing or conflicting evidence through the parent to the librarian before using it.
+   - Create or revise the letter source under the Versioned Application Artifacts policy above.
    - Use the company address if available from the JD or official source.
    - Salary should usually stay out of the cover letter unless the user explicitly asks.
 
@@ -167,7 +168,7 @@ Versioning rules:
    - If any resume wording or content changed after its latest senior-HR standout `PASS`, send that exact active source back to `application_reviewer` and require another `PASS` before formatting. Formatting-only changes do not require another content review.
    - Follow the formatting and `artifacts/formatted/` copy rules in Versioned Application Artifacts.
 
-8. Update the job-folder `methodology_summary.md`.
+8. The parent updates the job-folder `methodology_summary.md`.
    - Use this file for job-specific notes only.
    - Include the source JD path and normalized job folder.
    - Include inferred company and role.
@@ -224,7 +225,7 @@ The validator should print `user memory schema ok`.
 - Direct, adjacent, and gap areas are clearly separated.
 - The targeted resume/CV follows `.agents/skills/resume-writer/SKILL.md`.
 - The targeted cover letter follows `.agents/skills/cover-letter-writer/SKILL.md`.
-- New resume/CV and cover-letter versions are created after the previous active source is moved to the matching `retired/` location, rather than overwriting or retaining superseded sources in the active folder.
+- Source revisions and formatted outputs follow Versioned Application Artifacts.
 - Revisions are based on the latest relevant artifact plus the user's comments.
 - Every supported resume keyword has an intentional evidence anchor and treatment in `resume_plan`; adjacent and unsupported terms are not counted as direct coverage.
 - Resume alignment was checked by section, and no revision lost a supported term without an explicit reason.
