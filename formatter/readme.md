@@ -1,4 +1,4 @@
-Convert a Markdown resume or cover letter to Calibri DOCX + PDF (requires LibreOffice for PDF).
+Convert a Markdown resume or cover letter to Calibri DOCX + PDF. For PDF generation, install LibreOffice and ensure its `soffice` command is on your `PATH`.
 
     python3 formatter/format_resume.py data/YYYYMM/company_role/artifacts/resumes/targeted_resume_vNNN.md --out-dir data/YYYYMM/company_role/artifacts/formatted
     python3 formatter/format_cover_letter.py data/YYYYMM/company_role/artifacts/cover_letters/cover_letter_vNNN.md --out-dir data/YYYYMM/company_role/artifacts/formatted

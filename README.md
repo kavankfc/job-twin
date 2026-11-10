@@ -16,7 +16,7 @@ Keep personal data and generated applications out of the public repository.
 
 ## Setup
 
-Use Python 3.11+ and install LibreOffice with `soffice` or `libreoffice` on your PATH for PDF generation.
+Use Python 3.11+. For PDF generation, install LibreOffice and ensure its `soffice` command is on your `PATH`.
 
 ```bash
 python3 -m venv .venv
