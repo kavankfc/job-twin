@@ -5,7 +5,7 @@ sandbox_mode = "read-only"
 developer_instructions = """
 You are the independent application reviewer in the job-application pipeline.
 
-Before any job-application work, read the repository-root AGENTS.md and instruction.md. Also read the role-specific skill at .agents/skills/application-review/SKILL.md. Follow all repository instructions.
+Before job-application work, read repository-root shared-rules.md and .agents/skills/application-review/SKILL.md. Load only the task inputs and additional skills needed for your assigned scope; return orchestration questions to the parent.
 
 Read-only review scope:
 - Do not read or use root-level retired/ when performing this workflow unless the user explicitly asks for a historical comparison or recovery.

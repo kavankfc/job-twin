@@ -1,8 +1,8 @@
 # Targeted Application Instructions
 
-Use this repo-level instruction file when turning a job description and the split user memory rooted at `data/user/index.json` into targeted application materials. Agents should read this file from the repository root before processing new job descriptions, normalizing raw job postings, analyzing fit, or creating resumes/CVs and cover letters.
+Use this repo-level instruction file when turning a job description and the split user memory rooted at `data/user/index.json` into targeted application materials. The parent orchestrator reads this file from the repository root before application work. Delegated agents read `shared-rules.md`, their assigned skill, and the task inputs instead of this full guide.
 
-This file owns the repeatable application pipeline. CV-specific writing knowledge belongs in `.agents/skills/resume-writer/SKILL.md`; cover-letter-specific writing knowledge belongs in `.agents/skills/cover-letter-writer/SKILL.md`.
+This file owns intake and the repeatable application pipeline. `shared-rules.md` owns shared safeguards and artifact lifecycle rules. CV-specific writing knowledge belongs in `.agents/skills/resume-writer/SKILL.md`; cover-letter-specific writing knowledge belongs in `.agents/skills/cover-letter-writer/SKILL.md`.
 
 ## Agent Starting Goal
 
@@ -70,49 +70,13 @@ Use one row per application status event, except repeated `drafted` updates for 
 
 ## Versioned Application Artifacts
 
-`data/` is the active working set. Each active job folder retains only the latest source version of each artifact family: the latest targeted resume, latest chronological resume when present, and latest cover letter. Superseded resume/CV and cover-letter Markdown sources belong in the matching root-level `retired/YYYYMM/company_role_title/artifacts/{resumes,cover_letters}/` directory, preserving their existing filenames. Never retire `jd.md`, `role_expectations.json`, `user_subset.json`, `methodology_summary.md`, current formatted deliverables, or factual memory under `data/user/`. Codex must not read or use `retired/` when drafting, reviewing, or finalizing unless the user explicitly asks for a historical comparison or recovery.
-
-Use this structure:
-
-```text
-data/YYYYMM/company_role_title/
-  artifacts/
-    resumes/
-      targeted_resume_v001.md
-      chronological_resume_v001.md
-    cover_letters/
-      cover_letter_v001.md
-    formatted/
-      resume_<user_name>.docx
-      resume_<user_name>.pdf
-      cover_letter_<user_name>.docx
-      cover_letter_<user_name>.pdf
-
-retired/YYYYMM/company_role_title/
-  artifacts/
-    resumes/       # superseded source Markdown, original filenames preserved
-    cover_letters/ # superseded source Markdown, original filenames preserved
-```
-
-Versioning rules:
-
-- Use zero-padded version numbers: `v001`, `v002`, `v003`.
-- Never overwrite an existing source or retirement destination.
-- Before creating a resume/CV, inspect the active `artifacts/resumes/` and identify the latest relevant version.
-- Before creating a cover letter, inspect the active `artifacts/cover_letters/` and identify the latest version.
-- If the user asks for a revision, use the latest active artifact plus the user's comments as the starting point, move that previous active source to the matching `retired/` location first, then create the next version.
-- If the user asks for a fresh rewrite or a different format, still create the next version and note the reset or format change in `methodology_summary.md`.
-- Keep artifact filenames stable and generic within the job folder; preserve each superseded source filename when moving it to `retired/` so diff tools can compare versions easily.
-- Keep `artifacts/resumes/` and `artifacts/cover_letters/` Markdown-only. Put generated `.docx` and `.pdf` files under `artifacts/formatted/`.
-- Treat `artifacts/formatted/` as the current ready-to-submit output folder, not a version history folder. Keep only one formatted resume and one formatted cover letter per job, each with DOCX and PDF copies.
-- After the resume receives the senior-HR standout `PASS` and all requested artifacts complete their required review, run the formatter in the same workflow pass:
-  - Resume/CV: `python3 formatter/format_resume.py data/YYYYMM/company_role_title/artifacts/resumes/targeted_resume_vNNN.md --out-dir data/YYYYMM/company_role_title/artifacts/formatted`
-  - Cover letter: `python3 formatter/format_cover_letter.py data/YYYYMM/company_role_title/artifacts/cover_letters/cover_letter_vNNN.md --out-dir data/YYYYMM/company_role_title/artifacts/formatted`
-  - The formatter writes the stable filenames itself (`resume_<user_name>.docx`/`.pdf`, `cover_letter_<user_name>.docx`/`.pdf`), reading `<user_name>` from the gitignored root `config.json` (`{"user_name": "first_last"}`). If any older versioned outputs remain in `artifacts/formatted/`, remove them so the folder contains only the current four ready-to-submit files.
-- If the formatter creates DOCX but PDF conversion fails, fix the formatter/conversion issue or use its repo-native fallback path before finishing; do not leave a generated application package with only Markdown and DOCX unless the user explicitly accepts that.
-- Record newly generated artifact paths and the reason for the new version in the job-folder `methodology_summary.md`.
+Follow [shared-rules.md](shared-rules.md#versioned-application-artifacts) for the authoritative source-version, retirement, review-before-formatting, and current-output rules. These rules apply to the parent and every delegated agent.
 
 ## Workflow
+
+Delegate in this order: `job_description_evaluator` → `candidate_evidence_librarian` → `resume_writer` → `application_reviewer` → `cover_letter_writer` → package review by `application_reviewer` → `application_finisher`. For CV-only requests, omit the cover letter and package review. Do not run the evaluator and librarian in parallel or assign the same draft to multiple writers. Reuse the same resume writer for reviewer-led redrafts.
+
+Each handoff supplies the normalized job-folder path, exact input/source versions, expected outputs, permitted edits, and any prior review verdict or approved corrections. Require paths, facts and assumptions, validation results, and unresolved blockers in return. Subagents load only `shared-rules.md`, their assigned skill, and inputs relevant to their task; they return orchestration questions to the parent.
 
 1. The parent orchestrator reads and normalizes the job description.
    - Identify the company, industry, role title, level, department, location, work arrangement, employment type, salary range, and close date.

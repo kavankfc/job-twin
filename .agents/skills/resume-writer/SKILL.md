@@ -5,7 +5,9 @@ description: Create or revise a targeted resume/CV for a specific job from user_
 
 # Resume Writer
 
-This skill owns the CV writing: profile, skills, optional core competencies, employment history, projects, and education/certifications. `instruction.md` owns the surrounding pipeline: JD intake, role expectations, fit scoring, subsets, artifact versioning, formatting, and logging.
+This skill owns the CV writing: profile, skills, optional core competencies, employment history, projects, and education/certifications. The parent follows `instruction.md` for the surrounding pipeline; `shared-rules.md` owns shared safeguards, artifact versioning, and formatting rules.
+
+Read repository-root `shared-rules.md` before drafting.
 
 ## Sources
 
@@ -13,7 +15,7 @@ This skill owns the CV writing: profile, skills, optional core competencies, emp
 2. Split user memory rooted at `data/user/index.json` — verification of cited facts, using its memory skill; do not independently select or reclassify evidence.
 3. `jd.md` / `role_expectations.json` — employer priorities and vocabulary, not candidate proof. Consume the subset's classifications and verify that each claim has its cited support.
 4. `data/user/resume_preferences.json` — the user's display defaults (skills labels, section order) and writing-style signals.
-5. The latest active resume plus user comments when revising, under `instruction.md` → Versioned Application Artifacts.
+5. The latest active resume plus user comments when revising, under `shared-rules.md` → Versioned Application Artifacts.
 
 ## Truth Rules
 
@@ -59,7 +61,7 @@ Before writing prose, add a compact `resume_plan` to `user_subset.json`:
 
 Use the smallest mode that satisfies the request: full CV, profile only, core competencies only, or single-section revision (replace only the requested section). Contact details appear only in a full CV header.
 
-Follow `instruction.md` → Versioned Application Artifacts for resume-family filenames, source revisions, retirement, and formatted outputs. Validate every draft; format only after the independent standout `PASS`.
+Follow `shared-rules.md` → Versioned Application Artifacts for resume-family filenames, source revisions, retirement, and formatted outputs. Run `python3 formatter/resume_validation.py <resume-path>` on every draft; format only after the independent standout `PASS`.
 
 Full CV structure unless the user asks otherwise:
 

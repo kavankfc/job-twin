@@ -14,7 +14,7 @@ def main() -> None:
                 "hookSpecificOutput": {
                     "hookEventName": "SubagentStart",
                     "additionalContext": (
-                        "Read repository AGENTS.md and instruction.md before job work; "
+                        "Read shared-rules.md and your assigned skill before job work; "
                         "preserve truth boundaries; return paths, facts/assumptions, "
                         "validation performed, and unresolved blockers."
                     ),

@@ -11,7 +11,7 @@ Use after every resume/CV draft for the mandatory senior-HR standout gate. Use a
 
 ## Inputs
 
-Read `instruction.md` first, then inspect the normalized job folder:
+Read `shared-rules.md` first, then inspect the normalized job folder:
 
 - `jd.md` and `role_expectations.json`
 - `user_subset.json`
@@ -27,7 +27,7 @@ Compare the artifacts and return prioritized findings only. Check:
 2. **Claim support:** every material resume or letter claim has a candidate evidence anchor; adjacent evidence is not presented as direct experience; unsupported JD terms are not claimed.
 3. **Keyword evidence coverage:** compare JD-only keywords and role expectations with supported/adjacent/unsupported classifications. Distinguish evidence-bearing coverage from Skills or heading-only mentions and flag missing high-signal terms.
 4. **Cross-artifact alignment, when a cover letter is in scope:** resume and cover letter use the same facts, version strategy, target role, gap handling, and employer context without duplicating stories unnecessarily.
-5. **Versioning and paths:** confirm zero-padded source versions, no overwritten prior drafts, and placement under the paths required by `instruction.md`.
+5. **Versioning and paths:** confirm zero-padded source versions, no overwritten prior drafts, and placement under the paths required by `shared-rules.md`.
 6. **Writing quality:** flag unsupported specificity, JD copying, vague or inflated wording, unclear ownership, repetition, awkward phrasing, and obvious format or length violations. Apply the dedicated writer skills' checks without rewriting their content.
 
 ## Senior-HR Standout Gate

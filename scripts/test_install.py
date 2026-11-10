@@ -1,6 +1,7 @@
 """Installer and skill-location regressions; uses temporary public fixtures only."""
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -37,7 +38,7 @@ class InstallTests(unittest.TestCase):
             ".agents/skills/resume-writer/verbs.md",
             ".agents/skills/user-json-memory/user.schema.json",
             ".codex/hooks/subagent_start.py",
-            "formatter/format_resume.py", "AGENTS.md", "instruction.md",
+            "formatter/format_resume.py", "AGENTS.md", "instruction.md", "shared-rules.md",
         ):
             self.assertEqual((self.target / relative).read_bytes(), (ROOT / relative).read_bytes())
         self.assertFalse((self.target / "config.json").exists())
@@ -102,7 +103,9 @@ class InstallTests(unittest.TestCase):
             input="{}", capture_output=True, text=True, cwd=self.target,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("additionalContext", result.stdout)
+        payload = json.loads(result.stdout)["hookSpecificOutput"]
+        self.assertEqual(payload["hookEventName"], "SubagentStart")
+        self.assertTrue(payload["additionalContext"])
 
 
 if __name__ == "__main__":

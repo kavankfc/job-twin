@@ -7,13 +7,15 @@ description: Draft or revise a targeted cover letter for a specific job applicat
 
 The letter complements the resume — it must not repeat it. It adds motivation, context behind one or two key experiences, answers to obvious questions (career change, tool gap, industry transition, level targeting), and proof of concise written communication. If the resume already states a metric, the letter may reference the story but should not re-run the resume's metric list wholesale; prove one or two focused competencies with compact stories instead of mentioning every strength.
 
+Read repository-root `shared-rules.md` before drafting.
+
 ## Inputs
 
 - JD / `role_expectations.json` supplies employer vocabulary; consume the librarian's classifications in `user_subset.json`. Mirror exact wording only where supported and natural; frame adjacent evidence as transferable, never as a direct claim.
 - The targeted resume for this job — the letter must match its facts and keyword strategy exactly.
 - `user_subset.json` supplies selected evidence and classifications. Use split memory at `data/user/index.json` only to verify cited facts under its memory skill. If the subset is absent or evidence is missing/conflicting, return the issue through the parent to the librarian before drafting the affected claim; do not reclassify or repeat its interview.
 - The subset's source-anchored `profile_context` from `data/user/profile.json`: `company_preferences` (high-value opening material for this employer), `career_transition_justification` (a one-two sentence bridge when relevant), and `career_certification_commitments` (a closing signal when a planned credential addresses a visible gap). If relevant context is missing, request it through the librarian.
-- The latest active letter plus user comments when revising, under `instruction.md` → Versioned Application Artifacts.
+- The latest active letter plus user comments when revising, under `shared-rules.md` → Versioned Application Artifacts.
 - The company's real mailing address from an official source (company site or the posting); omit the address only if none can be found.
 
 ## Perspective
@@ -24,7 +26,7 @@ The letter complements the resume — it must not repeat it. It adds motivation,
 
 ## File And Format
 
-Follow `instruction.md` → Versioned Application Artifacts for letter filenames, source revisions, retirement, and formatted outputs.
+Follow `shared-rules.md` → Versioned Application Artifacts for letter filenames, source revisions, retirement, and formatted outputs.
 
 Use the complete format below, including four paragraphs:
 

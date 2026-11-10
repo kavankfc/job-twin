@@ -11,7 +11,7 @@ Use when selecting candidate evidence, classifying requirement matches, assessin
 
 ## Required workflow
 
-1. Read the repository-root `instruction.md` first.
+1. Read the repository-root `shared-rules.md` first.
 2. Before reading or editing anything under `data/user/`, read the existing `.agents/skills/user-json-memory/SKILL.md` and follow it. Treat `data/user/index.json` and its registered split files as the factual source of truth.
 3. Use the normalized job folder, normally `data/YYYYMM/company_role_title/`, and read `jd.md` plus `role_expectations.json` when available. Do not process a raw JD as if it were normalized; route intake through the JD workflow first.
 4. Select only role-relevant skills, experience, projects, education, and completed certifications. Preserve title, organization, location, dates, tools, ownership, and outcomes for every included experience.

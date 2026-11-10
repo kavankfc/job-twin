@@ -8,7 +8,7 @@ import shutil
 
 SOURCE = Path(__file__).resolve().parents[1]
 ROOT_FILES = (
-    "AGENTS.md", "instruction.md", "README.md", ".gitignore",
+    "AGENTS.md", "instruction.md", "shared-rules.md", "README.md", ".gitignore",
     "requirements.txt", "config.example.json",
     ".codex/config.toml", ".codex/hooks.json",
 )
